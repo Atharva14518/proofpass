@@ -1,0 +1,25 @@
+{
+  "name": "proofpass-rescue",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "dependencies": { "react": "19.3.0", "react-dom": "19.3.0" },
+  "scripts": {
+    "dev": "npm run dev -w @proofpass/web",
+    "build": "npm run build -w @proofpass/contracts && npm run build -w @proofpass/web",
+    "test": "npm run test -w @proofpass/contracts && npm run test -w @proofpass/web",
+    "lint": "npm run lint -w @proofpass/web",
+    "db:generate": "npm run db:generate -w @proofpass/web",
+    "db:migrate": "npm run db:migrate -w @proofpass/web",
+    "db:seed": "npm run db:seed -w @proofpass/web",
+    "indexer": "npm run indexer -w @proofpass/web",
+    "e2e": "npm run e2e -w @proofpass/web"
+  },
+  "engines": { "node": ">=22.13.0" },
+  "overrides": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "deepmerge-ts": "8.0.2",
+    "mysql2": "3.24.5"
+  }
+}

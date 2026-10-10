@@ -1,0 +1,2 @@
+import { PageHead } from "@/components/page-head";import { CreateBatchForm } from "@/components/create-batch-form";
+export default function NewBatch(){return <main className="page container"><PageHead eyebrow="Canteen action" title="Create batch"><p>Define immutable public delivery terms, then confirm them in your wallet. Private pickup instructions remain off-chain.</p></PageHead><CreateBatchForm/></main>}

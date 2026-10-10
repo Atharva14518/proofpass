@@ -1,0 +1,1 @@
+export function ProofDisclaimer(){return <div className="notice"><strong>What the chain proves:</strong> which wallet submitted each confirmation, the order and time of those records, and how escrow was accounted for. It does not independently prove physical delivery, food quality, food safety, or that separate addresses belong to separate people.</div>}

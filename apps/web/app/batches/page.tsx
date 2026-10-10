@@ -1,0 +1,2 @@
+import { PageHead } from "@/components/page-head";import { DemoBanner } from "@/components/demo-banner";import { BatchTable } from "@/components/batch-table";
+export default function Batches(){return <main className="page container"><PageHead eyebrow="Delivery register" title="Batches"><p>Search by public batch identifier or wallet and filter the indexed delivery record. Confirm status on the public verification page before acting.</p></PageHead><DemoBanner/><BatchTable/></main>}

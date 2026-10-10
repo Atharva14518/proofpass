@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrganizationType {
+  CANTEEN
+  NGO
+  SPONSOR
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Organization {
+  id             String           @id @default(cuid())
+  name           String
+  type           OrganizationType
+  walletAddress  String           @unique
+  contactEmail   String?
+  contactPhone   String?
+  approvalStatus ApprovalStatus   @default(PENDING)
+  approvedAt     DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  batches        BatchPrivate[]
+}
+
+model BatchPrivate {
+  id                 String       @id
+  canteenId           String
+  pickupInstructions  String
+  publicDescription   String
+  evidenceCommitment  String?
+  chainId              Int        @default(10143)
+  transactionHash      String?
+  confirmedBlock       BigInt?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  canteen               Organization @relation(fields: [canteenId], references: [id])
+}
+
+model WaitlistEntry {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  ipHash    String
+  createdAt DateTime @default(now())
+}
+
+model RateLimitEvent {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+  @@index([key, createdAt])
+}
+
+model AuthNonce {
+  id        String   @id @default(cuid())
+  address   String
+  nonceHash String   @unique
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([address, expiresAt])
+}
+
+model Session {
+  id        String   @id
+  address   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([address, expiresAt])
+}
+
+model ChainEvent {
+  id              String   @id
+  chainId         Int
+  contractAddress String
+  blockNumber     BigInt
+  transactionHash String
+  logIndex        Int
+  eventName       String
+  deliveryId      String?
+  payload         Json
+  blockTimestamp  DateTime?
+  createdAt       DateTime @default(now())
+  @@unique([chainId, transactionHash, logIndex])
+  @@index([deliveryId, blockNumber])
+}
+
+model IndexerCheckpoint {
+  id              String   @id
+  chainId         Int
+  contractAddress String
+  lastBlock       BigInt
+  updatedAt       DateTime @updatedAt
+}
+
+model DisputeNote {
+  id          String   @id @default(cuid())
+  deliveryId  String
+  author      String
+  reason      String
+  createdAt   DateTime @default(now())
+  @@index([deliveryId, createdAt])
+}

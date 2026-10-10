@@ -1,0 +1,2 @@
+import { PageHead } from "@/components/page-head";import { VerifyForm } from "@/components/verify-form";import { ProofDisclaimer } from "@/components/disclaimer";
+export default function Verify(){return <main className="page container"><PageHead eyebrow="Public read" title="Verify"><p>No wallet is required. Paste a public batch ID or scan its QR code to inspect the on-chain record.</p></PageHead><section className="card"><VerifyForm/></section><div style={{marginTop:28}}><ProofDisclaimer/></div></main>}

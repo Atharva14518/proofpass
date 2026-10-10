@@ -1,0 +1,16 @@
+CREATE TYPE "OrganizationType" AS ENUM ('CANTEEN', 'NGO', 'SPONSOR');
+CREATE TYPE "ApprovalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+CREATE TABLE "Organization" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "type" "OrganizationType" NOT NULL, "walletAddress" TEXT NOT NULL UNIQUE, "contactEmail" TEXT, "contactPhone" TEXT, "approvalStatus" "ApprovalStatus" NOT NULL DEFAULT 'PENDING', "approvedAt" TIMESTAMP(3), "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL);
+CREATE TABLE "BatchPrivate" ("id" TEXT PRIMARY KEY, "canteenId" TEXT NOT NULL REFERENCES "Organization"("id"), "pickupInstructions" TEXT NOT NULL, "publicDescription" TEXT NOT NULL, "evidenceCommitment" TEXT, "chainId" INTEGER NOT NULL DEFAULT 10143, "transactionHash" TEXT, "confirmedBlock" BIGINT, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL);
+CREATE TABLE "WaitlistEntry" ("id" TEXT PRIMARY KEY, "email" TEXT NOT NULL UNIQUE, "ipHash" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE "RateLimitEvent" ("id" TEXT PRIMARY KEY, "key" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX "RateLimitEvent_key_createdAt_idx" ON "RateLimitEvent"("key", "createdAt");
+CREATE TABLE "AuthNonce" ("id" TEXT PRIMARY KEY, "address" TEXT NOT NULL, "nonceHash" TEXT NOT NULL UNIQUE, "expiresAt" TIMESTAMP(3) NOT NULL, "consumedAt" TIMESTAMP(3), "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX "AuthNonce_address_expiresAt_idx" ON "AuthNonce"("address", "expiresAt");
+CREATE TABLE "Session" ("id" TEXT PRIMARY KEY, "address" TEXT NOT NULL, "expiresAt" TIMESTAMP(3) NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX "Session_address_expiresAt_idx" ON "Session"("address", "expiresAt");
+CREATE TABLE "ChainEvent" ("id" TEXT PRIMARY KEY, "chainId" INTEGER NOT NULL, "contractAddress" TEXT NOT NULL, "blockNumber" BIGINT NOT NULL, "transactionHash" TEXT NOT NULL, "logIndex" INTEGER NOT NULL, "eventName" TEXT NOT NULL, "deliveryId" TEXT, "payload" JSONB NOT NULL, "blockTimestamp" TIMESTAMP(3), "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "ChainEvent_chainId_transactionHash_logIndex_key" UNIQUE ("chainId", "transactionHash", "logIndex"));
+CREATE INDEX "ChainEvent_deliveryId_blockNumber_idx" ON "ChainEvent"("deliveryId", "blockNumber");
+CREATE TABLE "IndexerCheckpoint" ("id" TEXT PRIMARY KEY, "chainId" INTEGER NOT NULL, "contractAddress" TEXT NOT NULL, "lastBlock" BIGINT NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL);
+CREATE TABLE "DisputeNote" ("id" TEXT PRIMARY KEY, "deliveryId" TEXT NOT NULL, "author" TEXT NOT NULL, "reason" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX "DisputeNote_deliveryId_createdAt_idx" ON "DisputeNote"("deliveryId", "createdAt");

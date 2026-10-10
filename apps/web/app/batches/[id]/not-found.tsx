@@ -1,0 +1,1 @@
+import Link from "next/link";export default function NotFound(){return <main className="page container"><h1 className="display">Unknown batch</h1><p>No local demo batch matches that identifier. Public verification reports RPC errors separately from unknown IDs.</p><Link className="button" href="/verify">Verify another ID</Link></main>}

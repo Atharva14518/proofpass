@@ -1,0 +1,1 @@
+export function PageHead({eyebrow,title,children}:{eyebrow:string;title:string;children:React.ReactNode}){return <header className="page-head"><div><p className="eyebrow label">{eyebrow}</p><h1 className="display">{title}</h1></div><div>{children}</div></header>}
